@@ -15,6 +15,7 @@ class ColorStop extends React.Component {
 
   handleMouseDown (e) {
     e.preventDefault()
+    e.stopPropagation()
     if (e.button !== 0) return
     this.setState({
       posStart: e.clientX,
