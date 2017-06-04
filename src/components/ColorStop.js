@@ -1,9 +1,10 @@
 import React from 'react'
+import PropTypes from 'prop-types'
 import './ColorStop.css'
 
 class ColorStop extends React.Component {
-  constructor (props) {
-    super(props)
+  constructor () {
+    super()
     this.handleMouseDown = this.handleMouseDown.bind(this)
     this.handleMouseMove = this.handleMouseMove.bind(this)
     this.handleMouseUp = this.handleMouseUp.bind(this)
@@ -25,7 +26,7 @@ class ColorStop extends React.Component {
   componentDidMount () {
     // Start dragging right after adding new stop.
     // pointX is the cursor position when new stop has been created.
-    const { pointX } = this.props
+    const { pointX } = this.props.stop
     if (pointX) this.startDragging(pointX)
   }
 
@@ -37,11 +38,11 @@ class ColorStop extends React.Component {
 
   handleMouseMove (e) {
     if (!this.state.dragging) return
-    const { limits, id, pos, onPosChange } = this.props
+    const { limits, onPosChange, stop: { id, pos } } = this.props
     const newPos = pos + e.clientX - this.state.posStart
     if (newPos < limits.min || newPos > limits.max) return
     this.setState({ posStart: e.clientX })
-    onPosChange({ id: id, pos: newPos })
+    onPosChange({ id, pos: newPos })
   }
 
   handleMouseUp () {
@@ -51,7 +52,7 @@ class ColorStop extends React.Component {
   }
 
   render () {
-    const { pos, color } = this.props
+    const { pos, color } = this.props.stop
     return (
       <div className="cs"
            onMouseDown={ this.handleMouseDown }
@@ -59,6 +60,20 @@ class ColorStop extends React.Component {
       </div>
     )
   }
+}
+
+ColorStop.propTypes = {
+  stop: PropTypes.shape({
+    id: PropTypes.number.isRequired,
+    color: PropTypes.string.isRequired,
+    pos: PropTypes.number.isRequired,
+    pointX: PropTypes.number
+  }).isRequired,
+  limits: PropTypes.shape({
+    min: PropTypes.number.isRequired,
+    max: PropTypes.number.isRequired
+  }).isRequired,
+  onPosChange: PropTypes.func.isRequired
 }
 
 export default ColorStop

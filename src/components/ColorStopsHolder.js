@@ -1,5 +1,6 @@
 import React from 'react'
 import ColorStop from './ColorStop'
+import PropTypes from 'prop-types'
 import './ColorStopsHolder.css'
 
 class ColorStopsHolder extends React.Component {
@@ -21,16 +22,30 @@ class ColorStopsHolder extends React.Component {
           <ColorStop
             limits={ this.props.limits }
             key={ stop.id }
-            id={ stop.id }
-            pos={ stop.pos }
-            color={ stop.color }
-            pointX={ stop.pointX }
+            stop={ stop }
             onPosChange={ this.props.onPosChange }
           />
         )}
       </div>
     )
   }
+}
+
+ColorStopsHolder.propTypes = {
+  stops: PropTypes.arrayOf(
+    PropTypes.shape({
+      id: PropTypes.number.isRequired,
+      color: PropTypes.string.isRequired,
+      pos: PropTypes.number.isRequired,
+      pointX: PropTypes.number
+    }).isRequired
+  ).isRequired,
+  limits: PropTypes.shape({
+    min: PropTypes.number.isRequired,
+    max: PropTypes.number.isRequired
+  }).isRequired,
+  onAddColor: PropTypes.func.isRequired,
+  onPosChange: PropTypes.func.isRequired
 }
 
 export default ColorStopsHolder
