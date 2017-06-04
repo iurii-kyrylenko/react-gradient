@@ -31,15 +31,17 @@ class GradientBuilder extends React.Component {
     this.setState({ palette })
   }
 
-  handleAddColor (pos) {
+  handleAddColor ({ pos, pointX }) {
     const color = this.state.selectedColor
-    const entry = { id: this.nextId, pos: pos / HOLDER_WIDTH, color }
+    const entry = { id: this.nextId, pos: pos / HOLDER_WIDTH, color, pointX }
     const palette = [...this.state.palette, entry]
     this.setState({ palette })
   }
 
   get mapPaletteToStops () {
-    return this.state.palette.map(c => ({ ...c, pos: HOLDER_WIDTH * c.pos - HALF_STOP_WIDTH }))
+    return this.state.palette.map(c =>
+      ({ ...c, pos: HOLDER_WIDTH * c.pos - HALF_STOP_WIDTH })
+    )
   }
 
   render () {
