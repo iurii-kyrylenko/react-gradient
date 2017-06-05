@@ -14,11 +14,9 @@ class ColorStop extends React.Component {
     }
   }
 
-  startDragging (pointX) {
-    this.setState({
-      posStart: pointX,
-      dragging: true
-    })
+  activate (pointX) {
+    this.setState({ posStart: pointX, dragging: true })
+    this.props.onActivate(this.props.stop.id)
     document.addEventListener('mousemove', this.handleMouseMove)
     document.addEventListener('mouseup', this.handleMouseUp)
   }
@@ -27,13 +25,13 @@ class ColorStop extends React.Component {
     // Start dragging right after adding new stop.
     // pointX is the cursor position when new stop has been created.
     const { pointX } = this.props.stop
-    if (pointX) this.startDragging(pointX)
+    if (pointX) this.activate(pointX)
   }
 
   handleMouseDown (e) {
     e.preventDefault()
     e.stopPropagation()
-    if (!e.button) this.startDragging(e.clientX)
+    if (!e.button) this.activate(e.clientX)
   }
 
   handleMouseMove (e) {
@@ -73,7 +71,8 @@ ColorStop.propTypes = {
     min: PropTypes.number.isRequired,
     max: PropTypes.number.isRequired
   }).isRequired,
-  onPosChange: PropTypes.func.isRequired
+  onPosChange: PropTypes.func.isRequired,
+  onActivate: PropTypes.func.isRequired
 }
 
 export default ColorStop

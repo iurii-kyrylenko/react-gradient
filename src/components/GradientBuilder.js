@@ -14,14 +14,23 @@ class GradientBuilder extends React.Component {
         { id: 3, pos: 0.6, color: '#5a3' },
         { id: 4, pos: 0.8, color: '#ff0' }
       ],
-      selectedColor: '#fff'
+      activeId: 1
     }
     this.handlePosChange = this.handlePosChange.bind(this)
     this.handleAddColor = this.handleAddColor.bind(this)
+    this.handleActivate = this.handleActivate.bind(this)
   }
 
   get nextId () {
     return Math.max(...this.state.palette.map(c => c.id)) + 1
+  }
+
+  get activeStop () {
+    return this.state.palette.find(s => s.id === this.state.activeId)
+  }
+
+  handleActivate (activeId) {
+    this.setState({ activeId })
   }
 
   handlePosChange ({ id, pos }) {
@@ -32,7 +41,7 @@ class GradientBuilder extends React.Component {
   }
 
   handleAddColor ({ pos, pointX }) {
-    const color = this.state.selectedColor
+    const color = this.activeStop.color
     const entry = { id: this.nextId, pos: pos / HOLDER_WIDTH, color, pointX }
     const palette = [...this.state.palette, entry]
     this.setState({ palette })
@@ -51,6 +60,7 @@ class GradientBuilder extends React.Component {
         limits={{ min: -HALF_STOP_WIDTH, max: HOLDER_WIDTH - HALF_STOP_WIDTH }}
         onPosChange={ this.handlePosChange }
         onAddColor={ this.handleAddColor }
+        onActivate={ this.handleActivate }
       />
     )
   }

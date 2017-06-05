@@ -16,15 +16,11 @@ class ColorStopsHolder extends React.Component {
   }
 
   render () {
+    const { stops, onAddColor, ...rest } = this.props
     return (
       <div className="csh" onMouseDown={ this.handleMouseDown }>
-        { this.props.stops.map(stop =>
-          <ColorStop
-            limits={ this.props.limits }
-            key={ stop.id }
-            stop={ stop }
-            onPosChange={ this.props.onPosChange }
-          />
+        { stops.map(stop =>
+          <ColorStop key={ stop.id } stop={ stop } { ...rest } />
         )}
       </div>
     )
@@ -45,7 +41,8 @@ ColorStopsHolder.propTypes = {
     max: PropTypes.number.isRequired
   }).isRequired,
   onAddColor: PropTypes.func.isRequired,
-  onPosChange: PropTypes.func.isRequired
+  onPosChange: PropTypes.func.isRequired,
+  onActivate: PropTypes.func.isRequired
 }
 
 export default ColorStopsHolder
