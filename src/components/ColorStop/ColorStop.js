@@ -50,11 +50,12 @@ class ColorStop extends React.Component {
   }
 
   render () {
-    const { pos, color } = this.props.stop
+    const { pos, color, isActive } = this.props.stop
     return (
-      <div className="cs"
-           onMouseDown={ this.handleMouseDown }
-           style={{ left: pos, backgroundColor: color }}>
+      <div className={ isActive ? 'cs active' : 'cs' }
+           style={{ left: pos }}
+           onMouseDown={ this.handleMouseDown }>
+        <div style={{ backgroundColor: color }} />
       </div>
     )
   }
@@ -65,6 +66,7 @@ ColorStop.propTypes = {
     id: PropTypes.number.isRequired,
     color: PropTypes.string.isRequired,
     pos: PropTypes.number.isRequired,
+    isActive: PropTypes.bool.isRequired,
     pointX: PropTypes.number
   }).isRequired,
   limits: PropTypes.shape({

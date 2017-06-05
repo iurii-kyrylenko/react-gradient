@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import logo from './logo.svg'
 import './App.css'
-import GradientBuilder from './components/GradientBuilder'
+import GradientBuilder from './components/GradientBuilder/GradientBuilder'
 
 class App extends Component {
   render() {

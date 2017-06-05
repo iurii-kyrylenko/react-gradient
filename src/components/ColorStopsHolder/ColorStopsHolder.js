@@ -1,5 +1,5 @@
 import React from 'react'
-import ColorStop from './ColorStop'
+import ColorStop from '../ColorStop/ColorStop'
 import PropTypes from 'prop-types'
 import './ColorStopsHolder.css'
 
@@ -33,6 +33,7 @@ ColorStopsHolder.propTypes = {
       id: PropTypes.number.isRequired,
       color: PropTypes.string.isRequired,
       pos: PropTypes.number.isRequired,
+      isActive: PropTypes.bool.isRequired,
       pointX: PropTypes.number
     }).isRequired
   ).isRequired,

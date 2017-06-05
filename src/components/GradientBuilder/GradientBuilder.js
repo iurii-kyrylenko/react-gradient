@@ -1,5 +1,6 @@
 import React from 'react'
-import ColorStopsHolder from './ColorStopsHolder'
+import ColorStopsHolder from '../ColorStopsHolder/ColorStopsHolder'
+import Palette from '../Palette/Palette'
 
 const HALF_STOP_WIDTH = 5
 const HOLDER_WIDTH = 400
@@ -47,21 +48,25 @@ class GradientBuilder extends React.Component {
     this.setState({ palette })
   }
 
-  get mapPaletteToStops () {
+  get mapStateToStops () {
+    const activeId = this.state.activeId
     return this.state.palette.map(c =>
-      ({ ...c, pos: HOLDER_WIDTH * c.pos - HALF_STOP_WIDTH })
+      ({ ...c, pos: HOLDER_WIDTH * c.pos - HALF_STOP_WIDTH, isActive: c.id === activeId })
     )
   }
 
   render () {
     return (
-      <ColorStopsHolder
-        stops={ this.mapPaletteToStops }
-        limits={{ min: -HALF_STOP_WIDTH, max: HOLDER_WIDTH - HALF_STOP_WIDTH }}
-        onPosChange={ this.handlePosChange }
-        onAddColor={ this.handleAddColor }
-        onActivate={ this.handleActivate }
-      />
+      <div>
+        <Palette />
+        <ColorStopsHolder
+          stops={ this.mapStateToStops }
+          limits={{ min: -HALF_STOP_WIDTH, max: HOLDER_WIDTH - HALF_STOP_WIDTH }}
+          onPosChange={ this.handlePosChange }
+          onAddColor={ this.handleAddColor }
+          onActivate={ this.handleActivate }
+        />
+      </div>
     )
   }
 }

@@ -1,0 +1,21 @@
+.cs {
+  background-position: right center;
+  height: 17px;
+  position: absolute;
+  width: 11px;
+  cursor: pointer;
+  background-image: url(./cs.png);
+}
+
+.cs div {
+  height: 7px;
+  left: 2px;
+  width: 7px;
+  position: absolute;
+  top: 8px;
+}
+
+
+.active {
+  background-position: left center;
+}

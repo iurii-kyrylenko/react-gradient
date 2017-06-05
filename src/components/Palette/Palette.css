@@ -1,0 +1,7 @@
+.palette {
+  cursor: crosshair;
+  position: relative;
+  width: 400px;
+  height: 48px;
+  background-color: #eee;
+}
