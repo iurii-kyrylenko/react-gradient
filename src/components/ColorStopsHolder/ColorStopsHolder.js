@@ -39,11 +39,13 @@ ColorStopsHolder.propTypes = {
   ).isRequired,
   limits: PropTypes.shape({
     min: PropTypes.number.isRequired,
-    max: PropTypes.number.isRequired
+    max: PropTypes.number.isRequired,
+    drop: PropTypes.number.isRequired
   }).isRequired,
   onAddColor: PropTypes.func.isRequired,
   onPosChange: PropTypes.func.isRequired,
-  onActivate: PropTypes.func.isRequired
+  onActivate: PropTypes.func.isRequired,
+  onDeleteColor: PropTypes.func.isRequired
 }
 
 export default ColorStopsHolder

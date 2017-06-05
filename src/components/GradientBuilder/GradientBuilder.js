@@ -20,6 +20,7 @@ class GradientBuilder extends React.Component {
     this.handlePosChange = this.handlePosChange.bind(this)
     this.handleAddColor = this.handleAddColor.bind(this)
     this.handleActivate = this.handleActivate.bind(this)
+    this.handleDeleteColor = this.handleDeleteColor.bind(this)
   }
 
   get nextId () {
@@ -32,6 +33,13 @@ class GradientBuilder extends React.Component {
 
   handleActivate (activeId) {
     this.setState({ activeId })
+  }
+
+  handleDeleteColor (id) {
+    if (this.state.palette.length < 3) return
+    const palette = this.state.palette.filter(c => c.id !== id)
+    const activeId = palette.reduce((a, x) => x.pos < a.pos ? x : a, palette[0]).id
+    this.setState({ palette, activeId })
   }
 
   handlePosChange ({ id, pos }) {
@@ -61,11 +69,17 @@ class GradientBuilder extends React.Component {
         <Palette />
         <ColorStopsHolder
           stops={ this.mapStateToStops }
-          limits={{ min: -HALF_STOP_WIDTH, max: HOLDER_WIDTH - HALF_STOP_WIDTH }}
+          limits={{
+            min: -HALF_STOP_WIDTH,
+            max: HOLDER_WIDTH - HALF_STOP_WIDTH,
+            drop: 50
+          }}
           onPosChange={ this.handlePosChange }
           onAddColor={ this.handleAddColor }
           onActivate={ this.handleActivate }
+          onDeleteColor={ this.handleDeleteColor }
         />
+        <pre>{ JSON.stringify(this.state, null, 2) }</pre>
       </div>
     )
   }

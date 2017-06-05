@@ -1,4 +1,5 @@
 import React from 'react'
+import ReactDOM from 'react-dom'
 import PropTypes from 'prop-types'
 import './ColorStop.css'
 
@@ -21,6 +22,12 @@ class ColorStop extends React.Component {
     document.addEventListener('mouseup', this.handleMouseUp)
   }
 
+  deactivate () {
+    this.setState({ dragging: false })
+    document.removeEventListener('mousemove', this.handleMouseMove)
+    document.removeEventListener('mouseup', this.handleMouseUp)
+  }
+
   componentDidMount () {
     // Start dragging right after adding new stop.
     // pointX is the cursor position when new stop has been created.
@@ -34,19 +41,27 @@ class ColorStop extends React.Component {
     if (!e.button) this.activate(e.clientX)
   }
 
-  handleMouseMove (e) {
+  handleMouseMove ({ clientX, clientY }) {
     if (!this.state.dragging) return
-    const { limits, onPosChange, stop: { id, pos } } = this.props
-    const newPos = pos + e.clientX - this.state.posStart
+
+    const { limits, onDeleteColor, onPosChange, stop: { id, pos } } = this.props
+
+    // Remove stop
+    const top = ReactDOM.findDOMNode(this).getBoundingClientRect().top
+    if (Math.abs(clientY - top) > limits.drop) {
+      this.deactivate()
+      onDeleteColor(id)
+      return
+    }
+
+    const newPos = pos + clientX - this.state.posStart
     if (newPos < limits.min || newPos > limits.max) return
-    this.setState({ posStart: e.clientX })
+    this.setState({ posStart: clientX })
     onPosChange({ id, pos: newPos })
   }
 
   handleMouseUp () {
-    this.setState({ dragging: false })
-    document.removeEventListener('mousemove', this.handleMouseMove)
-    document.removeEventListener('mouseup', this.handleMouseUp)
+    this.deactivate()
   }
 
   render () {
@@ -71,10 +86,12 @@ ColorStop.propTypes = {
   }).isRequired,
   limits: PropTypes.shape({
     min: PropTypes.number.isRequired,
-    max: PropTypes.number.isRequired
+    max: PropTypes.number.isRequired,
+    drop: PropTypes.number.isRequired
   }).isRequired,
   onPosChange: PropTypes.func.isRequired,
-  onActivate: PropTypes.func.isRequired
+  onActivate: PropTypes.func.isRequired,
+  onDeleteColor: PropTypes.func.isRequired
 }
 
 export default ColorStop
