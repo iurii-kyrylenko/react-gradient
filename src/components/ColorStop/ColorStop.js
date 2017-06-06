@@ -54,9 +54,10 @@ class ColorStop extends React.Component {
       return
     }
 
-    const newPos = pos + clientX - this.state.posStart
-    if (newPos < limits.min || newPos > limits.max) return
-    this.setState({ posStart: clientX })
+    // Limit movements
+    const offset = pos - this.state.posStart
+    const newPos = Math.max(Math.min(offset + clientX, limits.max), limits.min)
+    this.setState({ posStart: newPos - offset })
     onPosChange({ id, pos: newPos })
   }
 

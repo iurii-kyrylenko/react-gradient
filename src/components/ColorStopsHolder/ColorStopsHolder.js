@@ -10,6 +10,7 @@ class ColorStopsHolder extends React.Component {
   }
 
   handleMouseDown (e) {
+    e.preventDefault()
     if (e.button) return
     const pos = e.clientX - e.target.getBoundingClientRect().left
     this.props.onAddColor({ pos, pointX: e.clientX })
