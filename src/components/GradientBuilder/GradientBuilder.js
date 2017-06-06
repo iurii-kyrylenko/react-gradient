@@ -1,6 +1,7 @@
 import React from 'react'
 import ColorStopsHolder from '../ColorStopsHolder/ColorStopsHolder'
 import Palette from '../Palette/Palette'
+import ColorPicker from '../ColorPicker/ColorPicker'
 
 const HALF_STOP_WIDTH = 5
 const HOLDER_WIDTH = 401
@@ -15,12 +16,14 @@ class GradientBuilder extends React.Component {
         { id: 3, pos: 0.6, color: '#5a3' },
         { id: 4, pos: 0.8, color: '#ff0' }
       ],
-      activeId: 1
+      activeId: 1,
+      pointX: 0
     }
     this.handlePosChange = this.handlePosChange.bind(this)
     this.handleAddColor = this.handleAddColor.bind(this)
     this.handleActivate = this.handleActivate.bind(this)
     this.handleDeleteColor = this.handleDeleteColor.bind(this)
+    this.handleSelectColor = this.handleSelectColor.bind(this)
   }
 
   get nextId () {
@@ -56,6 +59,14 @@ class GradientBuilder extends React.Component {
     this.setState({ palette, pointX })
   }
 
+  handleSelectColor (color) {
+    let { palette, activeId } =  this.state
+    palette = palette.map(c =>
+      activeId === c.id ? { ...c, color } : { ...c }
+    )
+    this.setState({ palette })
+  }
+
   get mapStateToStops () {
     const activeId = this.state.activeId
     const pointX = this.state.pointX
@@ -83,6 +94,7 @@ class GradientBuilder extends React.Component {
           onActivate={ this.handleActivate }
           onDeleteColor={ this.handleDeleteColor }
         />
+        <ColorPicker onSelect={ this.handleSelectColor } />
         <pre>{ JSON.stringify(this.state, null, 2) }</pre>
       </div>
     )
