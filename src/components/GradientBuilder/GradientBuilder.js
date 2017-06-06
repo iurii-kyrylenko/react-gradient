@@ -81,7 +81,7 @@ class GradientBuilder extends React.Component {
   render () {
     return (
       <div>
-        <Palette />
+        <Palette palette={ this.state.palette } />
         <ColorStopsHolder
           stops={ this.mapStateToStops }
           limits={{
@@ -95,7 +95,7 @@ class GradientBuilder extends React.Component {
           onDeleteColor={ this.handleDeleteColor }
         />
         <ColorPicker onSelect={ this.handleSelectColor } />
-        <pre>{ JSON.stringify(this.state, null, 2) }</pre>
+        <pre style={{ fontSize: 10 }}>{ JSON.stringify(this.state, null, 2) }</pre>
       </div>
     )
   }
