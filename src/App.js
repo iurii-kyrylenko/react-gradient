@@ -2,12 +2,21 @@ import React from 'react'
 import logo from './logo.svg'
 import './App.css'
 import GradientBuilder from './components/GradientBuilder/GradientBuilder'
-import { SketchPicker } from 'react-color'
+import { SketchPicker as PluggedPicker } from 'react-color'
 
 const wrap = (Component) => ({ onChange, ...rest }) =>
   <Component { ...rest } onChange={ c => onChange(c.hex) } />
 
-const SketchPickerWrapped = wrap(SketchPicker)
+const gradientBuilderWith = (component) => () => {
+  const WrappedComponent = wrap(component)
+  return (
+    <GradientBuilder colorIn="color" colorOut="onChange">
+      <WrappedComponent />
+    </GradientBuilder>
+  )
+}
+
+const GradientBuilderWithPluggedPicker = gradientBuilderWith(PluggedPicker)
 
 class App extends React.Component {
   render() {
@@ -21,10 +30,7 @@ class App extends React.Component {
         </div>
         <div className="App-content">
           <GradientBuilder />
-
-          <GradientBuilder colorIn="color" colorOut="onChange">
-            <SketchPickerWrapped />
-          </GradientBuilder>
+          <GradientBuilderWithPluggedPicker />
        </div>
       </div>
     )
