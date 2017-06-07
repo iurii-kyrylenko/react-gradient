@@ -21,22 +21,25 @@ const colors = [
   { value: '#800080', name: 'purple' }
 ]
 
-const ColorPicker = ({ onSelect }) => {
+const ColorPicker = ({ onSelect, color }) => {
   return (
-    <div className="cp"> {
-      colors.map(c =>
-        <div onClick={ () => onSelect(c.value) }
-             key={ c.name }
-             title={ c.name }
-             style={{ backgroundColor: c.value }}
-        />
-      )
-    }
+    <div className="cp">
+      {
+        colors.map(c =>
+          <div onClick={ () => onSelect(c.value) }
+               key={ c.name }
+               title={ c.name }
+               style={{ backgroundColor: c.value }}
+          />
+        )
+      }
+      <pre>Active color: { color }</pre>
     </div>
   )
 }
 
 ColorPicker.propTypes = {
+  color: PropTypes.string.isRequired,
   onSelect: PropTypes.func.isRequired
 }
 

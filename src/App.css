@@ -16,6 +16,10 @@
   margin: 20px;
 }
 
+.cp, .sketch-picker {
+  margin-top: 6px;
+}
+
 @keyframes App-logo-spin {
   from { transform: rotate(0deg); }
   to { transform: rotate(360deg); }

@@ -78,6 +78,21 @@ class GradientBuilder extends React.Component {
     }))
   }
 
+  get colorPicker () {
+    const { children, colorIn, colorOut } = this.props
+    if (!children) {
+      return <ColorPicker
+        color={ this.activeStop.color }
+        onSelect={ this.handleSelectColor }
+      />
+    }
+    const child = React.Children.only(children)
+    return React.cloneElement(child, {
+      [colorIn]: this.activeStop.color,
+      [colorOut]: this.handleSelectColor
+    })
+  }
+
   render () {
     return (
       <div>
@@ -94,7 +109,7 @@ class GradientBuilder extends React.Component {
           onActivate={ this.handleActivate }
           onDeleteColor={ this.handleDeleteColor }
         />
-        <ColorPicker onSelect={ this.handleSelectColor } />
+        { this.colorPicker }
         <pre style={{ fontSize: 10 }}>{ JSON.stringify(this.state, null, 2) }</pre>
       </div>
     )
