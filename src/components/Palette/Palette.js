@@ -1,12 +1,11 @@
 import React from 'react'
 import PropTypes from 'prop-types'
-import './Palette.css'
 
-const Palette = ({ palette }) => {
+const Palette = ({ palette, width, height }) => {
   const compare = ({ pos: pos1 }, { pos: pos2 }) => pos1 - pos2
   const sortedPalette = [...palette].sort(compare)
   return (
-    <div className="palette">
+    <div className="palette" style={{ width, height }}>
       <svg width="100%" height="100%">
         <defs>
           <linearGradient id="lgrad" x1="0" y1="0.5" x2="1" y2="0.5"> {
@@ -26,6 +25,8 @@ const Palette = ({ palette }) => {
 }
 
 Palette.propTypes = {
+  width: PropTypes.number.isRequired,
+  height: PropTypes.number.isRequired,
   palette: PropTypes.arrayOf(
     PropTypes.shape({
       id: PropTypes.number.isRequired,

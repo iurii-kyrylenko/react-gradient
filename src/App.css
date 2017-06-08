@@ -20,6 +20,10 @@
   margin-top: 6px;
 }
 
+.palette {
+  border: 1px solid #ccc;
+}
+
 @keyframes App-logo-spin {
   from { transform: rotate(0deg); }
   to { transform: rotate(360deg); }

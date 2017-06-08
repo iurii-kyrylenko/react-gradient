@@ -7,10 +7,10 @@ import { SketchPicker as PluggedPicker } from 'react-color'
 const wrap = (Component) => ({ onChange, ...rest }) =>
   <Component { ...rest } onChange={ c => onChange(c.hex) } />
 
-const gradientBuilderWith = (component) => () => {
+const gradientBuilderWith = (component) => (props) => {
   const WrappedComponent = wrap(component)
   return (
-    <GradientBuilder colorIn="color" colorOut="onChange">
+    <GradientBuilder { ...props } colorIn="color" colorOut="onChange">
       <WrappedComponent />
     </GradientBuilder>
   )
@@ -30,7 +30,7 @@ class App extends React.Component {
         </div>
         <div className="App-content">
           <GradientBuilder />
-          <GradientBuilderWithPluggedPicker />
+          <GradientBuilderWithPluggedPicker {...{ width: 320, height: 16 }} />
        </div>
       </div>
     )

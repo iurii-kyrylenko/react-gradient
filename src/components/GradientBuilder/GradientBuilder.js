@@ -1,14 +1,14 @@
 import React from 'react'
+import PropTypes from 'prop-types'
 import ColorStopsHolder from '../ColorStopsHolder/ColorStopsHolder'
 import Palette from '../Palette/Palette'
 import ColorPicker from '../ColorPicker/ColorPicker'
 
 const HALF_STOP_WIDTH = 5
-const HOLDER_WIDTH = 401
 
 class GradientBuilder extends React.Component {
-  constructor () {
-    super()
+  constructor (props) {
+    super(props)
     this.state = {
       palette: [
         { id: 1, pos: 0.2, color: '#a35' },
@@ -24,6 +24,10 @@ class GradientBuilder extends React.Component {
     this.handleActivate = this.handleActivate.bind(this)
     this.handleDeleteColor = this.handleDeleteColor.bind(this)
     this.handleSelectColor = this.handleSelectColor.bind(this)
+  }
+
+  get width1 () {
+    return this.props.width + 1
   }
 
   get nextId () {
@@ -47,14 +51,14 @@ class GradientBuilder extends React.Component {
 
   handlePosChange ({ id, pos }) {
     const palette = this.state.palette.map(c =>
-      id === c.id ? { ...c, pos: (pos + HALF_STOP_WIDTH) / HOLDER_WIDTH } : { ...c }
+      id === c.id ? { ...c, pos: (pos + HALF_STOP_WIDTH) / this.width1 } : { ...c }
     )
     this.setState({ palette })
   }
 
   handleAddColor ({ pos, pointX }) {
     const color = this.activeStop.color
-    const entry = { id: this.nextId, pos: pos / HOLDER_WIDTH, color }
+    const entry = { id: this.nextId, pos: pos / this.width1, color }
     const palette = [...this.state.palette, entry]
     this.setState({ palette, pointX })
   }
@@ -72,7 +76,7 @@ class GradientBuilder extends React.Component {
     const pointX = this.state.pointX
     return this.state.palette.map(c => ({
       ...c,
-      pos: HOLDER_WIDTH * c.pos - HALF_STOP_WIDTH,
+      pos: this.width1 * c.pos - HALF_STOP_WIDTH,
       isActive: c.id === activeId,
       pointX
     }))
@@ -94,26 +98,38 @@ class GradientBuilder extends React.Component {
   }
 
   render () {
+    const { width, height, drop } = this.props
+    const min = -HALF_STOP_WIDTH
+    const max = this.width1 - HALF_STOP_WIDTH
     return (
       <div>
-        <Palette palette={ this.state.palette } />
+        <Palette width={ width } height={ height } palette={ this.state.palette } />
         <ColorStopsHolder
+          width={ width }
           stops={ this.mapStateToStops }
-          limits={{
-            min: -HALF_STOP_WIDTH,
-            max: HOLDER_WIDTH - HALF_STOP_WIDTH,
-            drop: 50
-          }}
+          limits={{ min, max, drop }}
           onPosChange={ this.handlePosChange }
           onAddColor={ this.handleAddColor }
           onActivate={ this.handleActivate }
           onDeleteColor={ this.handleDeleteColor }
         />
         { this.colorPicker }
-        <pre style={{ fontSize: 10 }}>{ JSON.stringify(this.state, null, 2) }</pre>
+        {/*<pre style={{ fontSize: 10 }}>{ JSON.stringify(this.state, null, 2) }</pre>*/}
       </div>
     )
   }
+}
+
+GradientBuilder.propTypes = {
+  width: PropTypes.number,
+  height: PropTypes.number,
+  drop: PropTypes.number
+}
+
+GradientBuilder.defaultProps = {
+  width: 400,
+  height: 32,
+  drop: 50
 }
 
 export default GradientBuilder

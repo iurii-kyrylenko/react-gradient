@@ -1,11 +1,10 @@
 import React from 'react'
 import ColorStop from '../ColorStop/ColorStop'
 import PropTypes from 'prop-types'
-import './ColorStopsHolder.css'
 
 class ColorStopsHolder extends React.Component {
-  constructor () {
-    super()
+  constructor (props) {
+    super(props)
     this.handleMouseDown = this.handleMouseDown.bind(this)
   }
 
@@ -17,9 +16,10 @@ class ColorStopsHolder extends React.Component {
   }
 
   render () {
-    const { stops, onAddColor, ...rest } = this.props
+    const { width, stops, onAddColor, ...rest } = this.props
+    const style = { width, height: 17, position: 'relative', cursor: 'crosshair' }
     return (
-      <div className="csh" onMouseDown={ this.handleMouseDown }>
+      <div className="csh" style={ style } onMouseDown={ this.handleMouseDown }>
         { stops.map(stop =>
           <ColorStop key={ stop.id } stop={ stop } { ...rest } />
         )}
@@ -29,6 +29,7 @@ class ColorStopsHolder extends React.Component {
 }
 
 ColorStopsHolder.propTypes = {
+  width: PropTypes.number.isRequired,
   stops: PropTypes.arrayOf(
     PropTypes.shape({
       id: PropTypes.number.isRequired,
