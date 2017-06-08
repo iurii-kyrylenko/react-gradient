@@ -1,5 +1,7 @@
 ## Gradient Color Builder
 
+### [Demo](https://iurii-kyrylenko.github.io/react-gradient/)
+
 This project was bootstrapped with [Create React App](https://github.com/facebookincubator/create-react-app).
 
 ### Install
