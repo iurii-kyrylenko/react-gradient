@@ -3,27 +3,30 @@ import PropTypes from 'prop-types'
 import ColorStopsHolder from '../ColorStopsHolder/ColorStopsHolder'
 import Palette from '../Palette/Palette'
 import ColorPicker from '../ColorPicker/ColorPicker'
+import './GradientBuilder.css'
 
 const HALF_STOP_WIDTH = 5
+
+const getDefaultState = (props) => ({
+  palette: props.defaultValue.map((c, i) => ({  id: i + 1, ...c })),
+  activeId: 1
+})
 
 class GradientBuilder extends React.Component {
   constructor (props) {
     super(props)
     this.state = {
-      palette: [
-        { id: 1, pos: 0.2, color: '#a35' },
-        { id: 2, pos: 0.4, color: '#35a' },
-        { id: 3, pos: 0.6, color: '#5a3' },
-        { id: 4, pos: 0.8, color: '#ff0' }
-      ],
-      activeId: 1,
-      pointX: 0
+      ...getDefaultState(props),
+      pointX: 0,
+      canSubmit: false
     }
     this.handlePosChange = this.handlePosChange.bind(this)
     this.handleAddColor = this.handleAddColor.bind(this)
     this.handleActivate = this.handleActivate.bind(this)
     this.handleDeleteColor = this.handleDeleteColor.bind(this)
     this.handleSelectColor = this.handleSelectColor.bind(this)
+    this.handleSubmit = this.handleSubmit.bind(this)
+    this.handleReset = this.handleReset.bind(this)
   }
 
   get width1 () {
@@ -46,21 +49,21 @@ class GradientBuilder extends React.Component {
     if (this.state.palette.length < 3) return
     const palette = this.state.palette.filter(c => c.id !== id)
     const activeId = palette.reduce((a, x) => x.pos < a.pos ? x : a, palette[0]).id
-    this.setState({ palette, activeId })
+    this.setState({ palette, activeId, canSubmit: true })
   }
 
   handlePosChange ({ id, pos }) {
     const palette = this.state.palette.map(c =>
       id === c.id ? { ...c, pos: (pos + HALF_STOP_WIDTH) / this.width1 } : { ...c }
     )
-    this.setState({ palette })
+    this.setState({ palette, canSubmit: true })
   }
 
   handleAddColor ({ pos, pointX }) {
     const color = this.activeStop.color
     const entry = { id: this.nextId, pos: pos / this.width1, color }
     const palette = [...this.state.palette, entry]
-    this.setState({ palette, pointX })
+    this.setState({ palette, pointX, canSubmit: true })
   }
 
   handleSelectColor (color) {
@@ -68,7 +71,21 @@ class GradientBuilder extends React.Component {
     palette = palette.map(c =>
       activeId === c.id ? { ...c, color } : { ...c }
     )
-    this.setState({ palette })
+    this.setState({ palette, canSubmit: true })
+  }
+
+  handleSubmit (e) {
+    e.preventDefault()
+    const compare = ({ pos: pos1 }, { pos: pos2 }) => pos1 - pos2
+    const sortedPalette = [...this.state.palette].sort(compare)
+    const result = sortedPalette.map(({ id, ...rest }) => ({ ...rest }))
+    this.props.onSubmit(result)
+    this.setState({ canSubmit: false })
+  }
+
+  handleReset (e) {
+    e.preventDefault()
+    this.setState(getDefaultState(this.props))
   }
 
   get mapStateToStops () {
@@ -114,7 +131,14 @@ class GradientBuilder extends React.Component {
           onDeleteColor={ this.handleDeleteColor }
         />
         { this.colorPicker }
-        {/*<pre style={{ fontSize: 10 }}>{ JSON.stringify(this.state, null, 2) }</pre>*/}
+        <div className="cmd">
+          <a href=""
+             className={ this.state.canSubmit ? '' : 'disabled' }
+             onClick={ this.handleSubmit }>Submit
+          </a>
+          {' | '}
+          <a href="" onClick={ this.handleReset }>Reset</a>
+        </div>
       </div>
     )
   }
@@ -123,13 +147,24 @@ class GradientBuilder extends React.Component {
 GradientBuilder.propTypes = {
   width: PropTypes.number,
   height: PropTypes.number,
-  drop: PropTypes.number
+  drop: PropTypes.number,
+  defaultValue: PropTypes.arrayOf(
+    PropTypes.shape({
+      color: PropTypes.string.isRequired,
+      pos: PropTypes.number.isRequired,
+    }).isRequired
+  ),
+  onSubmit: PropTypes.func.isRequired
 }
 
 GradientBuilder.defaultProps = {
   width: 400,
   height: 32,
-  drop: 50
+  drop: 50,
+  defaultValue: [
+    { pos: 0, color: '#fff' },
+    { pos: 1, color: '#000' }
+  ]
 }
 
 export default GradientBuilder

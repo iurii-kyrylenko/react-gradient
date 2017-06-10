@@ -1,0 +1,16 @@
+.cmd {
+  font-size: 0.7em;
+  margin-top: 8px;
+}
+.cmd a {
+  text-decoration: none;
+  color: #777;
+}
+.cmd a:hover {
+  color: #000;
+}
+a.disabled {
+  pointer-events: none;
+  opacity: 0.5;
+}
+

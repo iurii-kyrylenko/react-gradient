@@ -19,6 +19,16 @@ const gradientBuilderWith = (component) => (props) => {
 const GradientBuilderWithPluggedPicker = gradientBuilderWith(PluggedPicker)
 
 class App extends React.Component {
+  constructor (props) {
+    super(props)
+    this.state = {
+      palette: []
+    }
+    this.handleSubmit = this.handleSubmit.bind(this)
+  }
+  handleSubmit (palette) {
+    this.setState({ palette })
+  }
   render() {
     return (
       <div className="App">
@@ -29,8 +39,23 @@ class App extends React.Component {
           </h3>
         </div>
         <div className="App-content">
-          <GradientBuilder />
-          <GradientBuilderWithPluggedPicker {...{ width: 320, height: 16 }} />
+          <GradientBuilder onSubmit={ this.handleSubmit } />
+          <hr />
+          <GradientBuilderWithPluggedPicker {...{
+            width: 320,
+            height: 16,
+            defaultValue: [
+              {  pos: 0.00, color: '#f00' },
+              {  pos: 0.20, color: '#ff0' },
+              {  pos: 0.40, color: '#0f0' },
+              {  pos: 0.60, color: '#0ff' },
+              {  pos: 0.80, color: '#00f' },
+              {  pos: 1.00, color: '#f0f' }
+            ],
+            onSubmit: this.handleSubmit
+          }} />
+          <hr />
+          <pre style={{ fontSize: 10 }}>{ JSON.stringify(this.state.palette, null, 2) }</pre>
        </div>
       </div>
     )
