@@ -7,17 +7,17 @@ import './GradientBuilder.css'
 
 const HALF_STOP_WIDTH = 5
 
-const getDefaultState = (props) => ({
+const defaultState = (props) => ({
   palette: props.defaultValue.map((c, i) => ({  id: i + 1, ...c })),
-  activeId: 1
+  activeId: 1,
+  pointX: null
 })
 
 class GradientBuilder extends React.Component {
   constructor (props) {
     super(props)
     this.state = {
-      ...getDefaultState(props),
-      pointX: 0,
+      ...defaultState(props),
       canSubmit: false
     }
     this.handlePosChange = this.handlePosChange.bind(this)
@@ -85,7 +85,7 @@ class GradientBuilder extends React.Component {
 
   handleReset (e) {
     e.preventDefault()
-    this.setState(getDefaultState(this.props))
+    this.setState(defaultState(this.props))
   }
 
   get mapStateToStops () {
