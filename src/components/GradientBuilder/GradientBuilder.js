@@ -69,6 +69,7 @@ class GradientBuilder extends React.Component {
       activeId === c.id ? { ...c, color } : { ...c }
     )
     this.setState({ palette })
+    this.props.onPaletteChange(palette)
   }
 
   get mapStateToStops () {
@@ -123,7 +124,8 @@ class GradientBuilder extends React.Component {
 GradientBuilder.propTypes = {
   width: PropTypes.number,
   height: PropTypes.number,
-  drop: PropTypes.number
+  drop: PropTypes.number,
+  onPaletteChange: PropTypes.func.isRequired
 }
 
 GradientBuilder.defaultProps = {

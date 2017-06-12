@@ -11,7 +11,7 @@ const gradientBuilderWith = (component) => (props) => {
   const WrappedComponent = wrap(component)
   return (
     <GradientBuilder { ...props } colorIn="color" colorOut="onChange">
-      <WrappedComponent />
+      <WrappedComponent {...{ width: 300, disableAlpha: true }}  />
     </GradientBuilder>
   )
 }
@@ -19,6 +19,20 @@ const gradientBuilderWith = (component) => (props) => {
 const GradientBuilderWithPluggedPicker = gradientBuilderWith(PluggedPicker)
 
 class App extends React.Component {
+  constructor (props) {
+    super(props)
+    this.state = {
+      palette: []
+    }
+    this.handlePaletteChange = this.handlePaletteChange.bind(this)
+  }
+
+  handlePaletteChange (palette) {
+    console.log(palette)
+    // Problem with react-color: dragging breaks
+    // this.setState(() => ({ palette }))
+  }
+
   render() {
     return (
       <div className="App">
@@ -29,8 +43,12 @@ class App extends React.Component {
           </h3>
         </div>
         <div className="App-content">
-          <GradientBuilder />
-          <GradientBuilderWithPluggedPicker {...{ width: 320, height: 16 }} />
+          <GradientBuilderWithPluggedPicker {...{
+            width: 320,
+            height: 16,
+            onPaletteChange: this.handlePaletteChange
+          }} />
+          <pre>{ JSON.stringify(this.state.palette, null, 2) }</pre>
        </div>
       </div>
     )
