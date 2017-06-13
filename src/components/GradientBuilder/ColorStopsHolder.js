@@ -1,5 +1,5 @@
 import React from 'react'
-import ColorStop from '../ColorStop/ColorStop'
+import ColorStop from './ColorStop'
 import PropTypes from 'prop-types'
 
 class ColorStopsHolder extends React.Component {

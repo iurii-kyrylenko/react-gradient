@@ -1,8 +1,8 @@
 import React from 'react'
 import PropTypes from 'prop-types'
-import ColorStopsHolder from '../ColorStopsHolder/ColorStopsHolder'
-import Palette from '../Palette/Palette'
-import ColorPicker from '../ColorPicker/ColorPicker'
+import ColorStopsHolder from './ColorStopsHolder'
+import Palette from './Palette'
+import ColorPicker from './ColorPicker'
 
 const HALF_STOP_WIDTH = 5
 
@@ -152,8 +152,8 @@ GradientBuilder.defaultProps = {
   height: 32,
   drop: 50,
   palette: [
-    { pos: 0, color: '#ffffff' },
-    { pos: 1, color: '#000000' }
+    { pos: 0, color: '#9adafa' },
+    { pos: 1, color: '#028080' }
   ]
 }
 

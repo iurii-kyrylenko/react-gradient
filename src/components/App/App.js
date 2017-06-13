@@ -1,8 +1,10 @@
 import React from 'react'
 import logo from './logo.svg'
+import github from './github-logo.svg'
+import twitter from './twitter-logo.svg'
 import './App.css'
 import { SketchPicker } from 'react-color'
-import GradientBuilder from './components/GradientBuilder/GradientBuilder'
+import GradientBuilder from '../GradientBuilder/GradientBuilder'
 
 const WrappedSketchPicker = ({ onSelect, ...rest }) =>
   <SketchPicker { ...rest } onChange={ c => onSelect(c.hex) } />
@@ -22,14 +24,16 @@ class App extends React.Component {
 
   render() {
     return (
-      <div className="App">
-        <div className="App-header">
-          <h3>
-            <img src={logo} className="App-logo" alt="logo" />
-            Gradient Color Builder
-          </h3>
+      <div>
+        <div className="app-header">
+          <h2>
+            <img src={ logo } className="app-logo" alt="logo" />
+            <span>Gradient Builder</span>
+              <a href="https://twitter.com/iurii_kyrylenko" title="Twitter"><img src={ twitter } alt="twitter" /></a>
+              <a href="https://github.com/iurii-kyrylenko" title="GitHub"><img src={ github } alt="github" /></a>
+          </h2>
         </div>
-        <div className="App-content">
+        <div className="app-content">
           <GradientBuilder {...{
             width: 320,
             height: 16,
