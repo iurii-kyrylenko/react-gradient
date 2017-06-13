@@ -1,22 +1,11 @@
 import React from 'react'
 import logo from './logo.svg'
 import './App.css'
+import { SketchPicker } from 'react-color'
 import GradientBuilder from './components/GradientBuilder/GradientBuilder'
-import { SketchPicker as PluggedPicker } from 'react-color'
 
-const wrap = (Component) => ({ onChange, ...rest }) =>
-  <Component { ...rest } onChange={ c => onChange(c.hex) } />
-
-const gradientBuilderWith = (component) => (props) => {
-  const WrappedComponent = wrap(component)
-  return (
-    <GradientBuilder { ...props } colorIn="color" colorOut="onChange">
-      <WrappedComponent {...{ width: 300, disableAlpha: true }}  />
-    </GradientBuilder>
-  )
-}
-
-const GradientBuilderWithPluggedPicker = gradientBuilderWith(PluggedPicker)
+const WrappedSketchPicker = ({ onSelect, ...rest }) =>
+  <SketchPicker { ...rest } onChange={ c => onSelect(c.hex) } />
 
 class App extends React.Component {
   constructor (props) {
@@ -28,9 +17,7 @@ class App extends React.Component {
   }
 
   handlePaletteChange (palette) {
-    console.log(palette)
-    // Problem with react-color: dragging breaks
-    // this.setState(() => ({ palette }))
+    this.setState(() => ({ palette }))
   }
 
   render() {
@@ -43,12 +30,19 @@ class App extends React.Component {
           </h3>
         </div>
         <div className="App-content">
-          <GradientBuilderWithPluggedPicker {...{
+          <GradientBuilder {...{
             width: 320,
             height: 16,
             onPaletteChange: this.handlePaletteChange
-          }} />
-          <pre>{ JSON.stringify(this.state.palette, null, 2) }</pre>
+          }}>
+            <WrappedSketchPicker {...{
+              width: 300,
+              disableAlpha: true
+            }} />
+          </GradientBuilder>
+          <div className="result">
+            { JSON.stringify(this.state.palette) }
+          </div>
        </div>
       </div>
     )

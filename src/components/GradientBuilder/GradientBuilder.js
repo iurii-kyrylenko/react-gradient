@@ -6,19 +6,22 @@ import ColorPicker from '../ColorPicker/ColorPicker'
 
 const HALF_STOP_WIDTH = 5
 
+const toState = (palette) => ({
+  palette: palette.map((c, i) => ({  id: i + 1, ...c })),
+  activeId: 1,
+  pointX: null
+})
+
+const fromState = (palette) => {
+  const compare = ({ pos: pos1 }, { pos: pos2 }) => pos1 - pos2
+  const sortedPalette = palette.sort(compare)
+  return sortedPalette.map(({ pos, color }) => ({ pos: pos.toPrecision(5), color }))
+}
+
 class GradientBuilder extends React.Component {
   constructor (props) {
     super(props)
-    this.state = {
-      palette: [
-        { id: 1, pos: 0.2, color: '#a35' },
-        { id: 2, pos: 0.4, color: '#35a' },
-        { id: 3, pos: 0.6, color: '#5a3' },
-        { id: 4, pos: 0.8, color: '#ff0' }
-      ],
-      activeId: 1,
-      pointX: 0
-    }
+    this.state = { ...toState(props.palette) }
     this.handlePosChange = this.handlePosChange.bind(this)
     this.handleAddColor = this.handleAddColor.bind(this)
     this.handleActivate = this.handleActivate.bind(this)
@@ -38,40 +41,6 @@ class GradientBuilder extends React.Component {
     return this.state.palette.find(s => s.id === this.state.activeId)
   }
 
-  handleActivate (activeId) {
-    this.setState({ activeId })
-  }
-
-  handleDeleteColor (id) {
-    if (this.state.palette.length < 3) return
-    const palette = this.state.palette.filter(c => c.id !== id)
-    const activeId = palette.reduce((a, x) => x.pos < a.pos ? x : a, palette[0]).id
-    this.setState({ palette, activeId })
-  }
-
-  handlePosChange ({ id, pos }) {
-    const palette = this.state.palette.map(c =>
-      id === c.id ? { ...c, pos: (pos + HALF_STOP_WIDTH) / this.width1 } : { ...c }
-    )
-    this.setState({ palette })
-  }
-
-  handleAddColor ({ pos, pointX }) {
-    const color = this.activeStop.color
-    const entry = { id: this.nextId, pos: pos / this.width1, color }
-    const palette = [...this.state.palette, entry]
-    this.setState({ palette, pointX })
-  }
-
-  handleSelectColor (color) {
-    let { palette, activeId } =  this.state
-    palette = palette.map(c =>
-      activeId === c.id ? { ...c, color } : { ...c }
-    )
-    this.setState({ palette })
-    this.props.onPaletteChange(palette)
-  }
-
   get mapStateToStops () {
     const activeId = this.state.activeId
     const pointX = this.state.pointX
@@ -84,18 +53,63 @@ class GradientBuilder extends React.Component {
   }
 
   get colorPicker () {
-    const { children, colorIn, colorOut } = this.props
+    const { children } = this.props
+    const props = {
+      color: this.activeStop.color,
+      onSelect: this.handleSelectColor
+    }
     if (!children) {
-      return <ColorPicker
-        color={ this.activeStop.color }
-        onSelect={ this.handleSelectColor }
-      />
+      return <ColorPicker { ...props } />
     }
     const child = React.Children.only(children)
-    return React.cloneElement(child, {
-      [colorIn]: this.activeStop.color,
-      [colorOut]: this.handleSelectColor
-    })
+    return React.cloneElement(child, props)
+  }
+
+  notifyChange (palette) {
+    this.props.onPaletteChange(fromState(palette))
+  }
+
+  handleActivate (activeId) {
+    this.setState({ activeId })
+  }
+
+  handleDeleteColor (id) {
+    if (this.state.palette.length < 3) return
+    const palette = this.state.palette.filter(c => c.id !== id)
+    const activeId = palette.reduce((a, x) => x.pos < a.pos ? x : a, palette[0]).id
+    this.setState({ palette, activeId })
+    this.notifyChange(palette)
+  }
+
+  handlePosChange ({ id, pos }) {
+    const palette = this.state.palette.map(c =>
+      id === c.id ? { ...c, pos: (pos + HALF_STOP_WIDTH) / this.width1 } : { ...c }
+    )
+    this.setState({ palette })
+    this.notifyChange(palette)
+  }
+
+  handleAddColor ({ pos, pointX }) {
+    const color = this.activeStop.color
+    const entry = { id: this.nextId, pos: pos / this.width1, color }
+    const palette = [...this.state.palette, entry]
+    this.setState({ palette, pointX })
+    this.notifyChange(palette)
+  }
+
+  handleSelectColor (color) {
+    let { palette, activeId } =  this.state
+    palette = palette.map(c =>
+      activeId === c.id ? { ...c, color } : { ...c }
+    )
+    this.setState({ palette })
+    this.notifyChange(palette)
+  }
+
+  componentWillReceiveProps ({ palette }) {
+    // relay on immutability
+    if (palette === this.props.palette) return
+    this.setState(...toState(palette))
   }
 
   render () {
@@ -115,7 +129,6 @@ class GradientBuilder extends React.Component {
           onDeleteColor={ this.handleDeleteColor }
         />
         { this.colorPicker }
-        {/*<pre style={{ fontSize: 10 }}>{ JSON.stringify(this.state, null, 2) }</pre>*/}
       </div>
     )
   }
@@ -125,13 +138,23 @@ GradientBuilder.propTypes = {
   width: PropTypes.number,
   height: PropTypes.number,
   drop: PropTypes.number,
+  palette: PropTypes.arrayOf(
+    PropTypes.shape({
+      pos: PropTypes.number,
+      color: PropTypes.string
+    }).isRequired
+  ),
   onPaletteChange: PropTypes.func.isRequired
 }
 
 GradientBuilder.defaultProps = {
   width: 400,
   height: 32,
-  drop: 50
+  drop: 50,
+  palette: [
+    { pos: 0, color: '#ffffff' },
+    { pos: 1, color: '#000000' }
+  ]
 }
 
 export default GradientBuilder
