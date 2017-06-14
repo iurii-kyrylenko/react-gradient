@@ -1,10 +1,10 @@
 import React from 'react'
+import { SketchPicker } from 'react-color'
+import GradientBuilder from '../GradientBuilder/GradientBuilder'
 import logo from './logo.svg'
 import github from './github-logo.svg'
 import twitter from './twitter-logo.svg'
 import './App.css'
-import { SketchPicker } from 'react-color'
-import GradientBuilder from '../GradientBuilder/GradientBuilder'
 
 const WrappedSketchPicker = ({ onSelect, ...rest }) =>
   <SketchPicker { ...rest } onChange={ c => onSelect(c.hex) } />
@@ -13,41 +13,70 @@ class App extends React.Component {
   constructor (props) {
     super(props)
     this.state = {
-      palette: []
+      palette1: undefined,
+      palette2: undefined
     }
-    this.handlePaletteChange = this.handlePaletteChange.bind(this)
-  }
-
-  handlePaletteChange (palette) {
-    this.setState(() => ({ palette }))
   }
 
   render() {
     return (
       <div>
         <div className="app-header">
-          <h2>
-            <img src={ logo } className="app-logo" alt="logo" />
-            <span>Gradient Builder</span>
-              <a href="https://twitter.com/iurii_kyrylenko" title="Twitter"><img src={ twitter } alt="twitter" /></a>
-              <a href="https://github.com/iurii-kyrylenko" title="GitHub"><img src={ github } alt="github" /></a>
-          </h2>
+          <img src={ logo } className="app-logo" alt="logo" />
+          <span>Gradient Builder</span>
+          <div className="info">
+            A palette has several (at least two) color stops.<br/>
+            An active stop has the black triangle point. You can change its color.<br/>
+            To activate a stop, press it or start dragging.<br/>
+            To add a new stop, press mouse in the stops area (+ cursor position).<br/>
+            To remove a stop, drag it away (up or down) from the stops area.
+          </div>
+          <a href="https://twitter.com/iurii_kyrylenko" title="Twitter">
+            <img src={ twitter } alt="twitter" />
+          </a>
+          <a href="https://github.com/iurii-kyrylenko" title="GitHub">
+            <img src={ github } alt="github" />
+          </a>
         </div>
         <div className="app-content">
-          <GradientBuilder {...{
-            width: 320,
-            height: 16,
-            onPaletteChange: this.handlePaletteChange
-          }}>
-            <WrappedSketchPicker {...{
-              width: 300,
-              disableAlpha: true
-            }} />
-          </GradientBuilder>
-          <div className="result">
-            { JSON.stringify(this.state.palette) }
+          <div>
+            <div className="title">
+              With&nbsp;
+              <a href="https://github.com/casesandberg/react-color/">react-color</a>
+              &nbsp;picker
+            </div>
+            <div className="result">
+              { JSON.stringify(this.state.palette1) }
+            </div>
+            <GradientBuilder {...{
+              width: 320,
+              height: 16,
+              palette: [
+                { pos: 0.00, color: '#eef10b' },
+                { pos: 0.49, color: '#d78025' },
+                { pos: 0.72, color: '#d0021b' },
+                { pos: 1.00, color: '#7e20cf' }
+              ],
+              onPaletteChange: (palette1) => this.setState({ palette1 })
+            }}>
+              <WrappedSketchPicker {...{
+                width: 300,
+                disableAlpha: true
+              }} />
+            </GradientBuilder>
           </div>
-       </div>
+          <div>
+            <div className="title">With default color picker</div>
+            <div className="result">
+              { JSON.stringify(this.state.palette2) }
+            </div>
+            <GradientBuilder {...{
+              width: 320,
+              height: 32,
+              onPaletteChange: (palette2) => this.setState({ palette2 })
+            }} />
+          </div>
+        </div>
       </div>
     )
   }

@@ -15,7 +15,7 @@ const toState = (palette) => ({
 const fromState = (palette) => {
   const compare = ({ pos: pos1 }, { pos: pos2 }) => pos1 - pos2
   const sortedPalette = palette.sort(compare)
-  return sortedPalette.map(({ pos, color }) => ({ pos: pos.toPrecision(5), color }))
+  return sortedPalette.map(({ pos, color }) => ({ pos: pos.toPrecision(3), color }))
 }
 
 class GradientBuilder extends React.Component {
@@ -106,10 +106,15 @@ class GradientBuilder extends React.Component {
     this.notifyChange(palette)
   }
 
-  componentWillReceiveProps ({ palette }) {
-    // relay on immutability
-    if (palette === this.props.palette) return
-    this.setState(...toState(palette))
+  componentWillReceiveProps ({ palette: next }) {
+    const { palette: current } = this.props
+    const length = Math.min(next.length, current.length)
+    for (let i = 0; i < length; i++) {
+      if (next[i].pos !== current[i].pos || next[i].color !== current[i].color) {
+        this.setState({ ...toState(next) })
+        return
+      }
+    }
   }
 
   render () {
