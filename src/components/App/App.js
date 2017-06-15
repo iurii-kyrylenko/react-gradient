@@ -14,12 +14,19 @@ const Result = ({ msg }) => {
   return (<div className="result">{ info } </div>)
 }
 
+const stock = [
+  [{pos:0,color:'#f00'},{pos:0.3,color:'#0f0'},{pos:1,color:'#00f'}],
+  [{pos:0,color:'#ff0'},{pos:0.6,color:'#f0f'},{pos:1,color:'#0ff'}],
+  [{pos:0,color:'#000764'},{pos:0.16,color:'#206bcb'},{pos:0.42,color:'#edffff'},{pos:0.64,color:'#ffaa00'},{pos:0.86,color:'#000200'},{pos:1,color:'#000764'}]
+]
+
 class App extends React.Component {
   constructor (props) {
     super(props)
     this.state = {
       palette1: null,
-      palette2: null
+      palette2: null,
+      selected: undefined
     }
   }
   render() {
@@ -73,8 +80,16 @@ class App extends React.Component {
             <GradientBuilder {...{
               width: 320,
               height: 32,
+              palette: this.state.selected,
               onPaletteChange: (palette2) => this.setState({ palette2 })
             }} />
+            <div className="title">Change prop 'palette'</div>
+            <div>
+              <select onChange={ e => this.setState({ selected: stock[e.target.value] }) }>
+                <option>Select palette</option>
+                { stock.map((_, i) => <option key={ i } value={ i }>#{ i + 1 }</option>) }
+              </select>
+            </div>
           </div>
         </div>
       </div>
