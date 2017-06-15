@@ -9,15 +9,19 @@ import './App.css'
 const WrappedSketchPicker = ({ onSelect, ...rest }) =>
   <SketchPicker { ...rest } onChange={ c => onSelect(c.hex) } />
 
+const Result = ({ msg }) => {
+  const info = !msg ? 'Result area' : JSON.stringify(msg)
+  return (<div className="result">{ info } </div>)
+}
+
 class App extends React.Component {
   constructor (props) {
     super(props)
     this.state = {
-      palette1: undefined,
-      palette2: undefined
+      palette1: null,
+      palette2: null
     }
   }
-
   render() {
     return (
       <div>
@@ -26,7 +30,7 @@ class App extends React.Component {
           <span>Gradient Builder</span>
           <div className="info">
             A palette has several (at least two) color stops.<br/>
-            An active stop has the black triangle point. You can change its color.<br/>
+            An active stop has the black triangular point. You can change its color.<br/>
             To activate a stop, press it or start dragging.<br/>
             To add a new stop, press mouse in the stops area (+ cursor position).<br/>
             To remove a stop, drag it away (up or down) from the stops area.
@@ -45,9 +49,7 @@ class App extends React.Component {
               <a href="https://github.com/casesandberg/react-color/">react-color</a>
               &nbsp;picker
             </div>
-            <div className="result">
-              { JSON.stringify(this.state.palette1) }
-            </div>
+            <Result msg={ this.state.palette1 } />
             <GradientBuilder {...{
               width: 320,
               height: 16,
@@ -67,9 +69,7 @@ class App extends React.Component {
           </div>
           <div>
             <div className="title">With default color picker</div>
-            <div className="result">
-              { JSON.stringify(this.state.palette2) }
-            </div>
+            <Result msg={ this.state.palette2 } />
             <GradientBuilder {...{
               width: 320,
               height: 32,

@@ -11,6 +11,7 @@
   height: 90px;
   color: #fff;
   line-height: 90px;
+  min-width: 760px;
 }
 
 .app-header .info {
