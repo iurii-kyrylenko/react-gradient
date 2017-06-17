@@ -1,5 +1,7 @@
 import React from 'react'
 import { SketchPicker } from 'react-color'
+import { Panel as ColorPicker } from 'rc-color-picker'
+import 'rc-color-picker/assets/index.css'
 import GradientBuilder from '../GradientBuilder/GradientBuilder'
 import logo from './logo.svg'
 import github from './github-logo.svg'
@@ -8,6 +10,9 @@ import './App.css'
 
 const WrappedSketchPicker = ({ onSelect, ...rest }) =>
   <SketchPicker { ...rest } onChange={ c => onSelect(c.hex) } />
+
+const WrappedColorPicker = ({ onSelect, ...rest }) =>
+  <ColorPicker { ...rest } onChange={ c => onSelect(c.color) } />
 
 const Result = ({ msg }) => {
   const info = !msg ? 'Result area' : JSON.stringify(msg)
@@ -26,6 +31,7 @@ class App extends React.Component {
     this.state = {
       palette1: null,
       palette2: null,
+      palette3: null,
       selected: undefined
     }
   }
@@ -50,38 +56,61 @@ class App extends React.Component {
           </a>
         </div>
         <div className="app-content">
-          <div>
+
+          <div className="demo">
+            <div className="title">
+              With&nbsp;
+              <a href="https://github.com/react-component/color-picker">rc-color-picker</a>
+            </div>
+            <Result msg={ this.state.palette1 } />
+            <GradientBuilder {...{
+              width: 320,
+              height: 32,
+              palette: [
+                { pos: 0.00, color: '#7e20cf' },
+                { pos: 0.28, color: '#d0021b' },
+                { pos: 0.65, color: '#ffcc00' },
+                { pos: 1.00, color: '#00ccff' }
+              ],
+              onPaletteChange: (palette1) => this.setState({ palette1 })
+            }}>
+              <WrappedColorPicker />
+            </GradientBuilder>
+          </div>
+
+          <div className="demo">
             <div className="title">
               With&nbsp;
               <a href="https://github.com/casesandberg/react-color/">react-color</a>
               &nbsp;picker
             </div>
-            <Result msg={ this.state.palette1 } />
+            <Result msg={ this.state.palette2 } />
             <GradientBuilder {...{
               width: 320,
-              height: 16,
+              height: 32,
               palette: [
                 { pos: 0.00, color: '#eef10b' },
                 { pos: 0.49, color: '#d78025' },
                 { pos: 0.72, color: '#d0021b' },
                 { pos: 1.00, color: '#7e20cf' }
               ],
-              onPaletteChange: (palette1) => this.setState({ palette1 })
+              onPaletteChange: (palette2) => this.setState({ palette2 })
             }}>
               <WrappedSketchPicker {...{
-                width: 300,
+                width: 200,
                 disableAlpha: true
               }} />
             </GradientBuilder>
           </div>
-          <div>
+
+          <div className="demo">
             <div className="title">With default color picker</div>
-            <Result msg={ this.state.palette2 } />
+            <Result msg={ this.state.palette3 } />
             <GradientBuilder {...{
               width: 320,
               height: 32,
               palette: this.state.selected,
-              onPaletteChange: (palette2) => this.setState({ palette2 })
+              onPaletteChange: (palette3) => this.setState({ palette3 })
             }} />
             <div className="title">Change prop 'palette'</div>
             <div>
@@ -91,6 +120,7 @@ class App extends React.Component {
               </select>
             </div>
           </div>
+
         </div>
       </div>
     )

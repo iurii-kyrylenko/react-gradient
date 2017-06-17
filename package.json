@@ -4,6 +4,7 @@
   "private": true,
   "homepage": "https://iurii-kyrylenko.github.io/react-gradient",
   "dependencies": {
+    "rc-color-picker": "^1.1.5",
     "react": "^15.5.4",
     "react-color": "^2.12.0",
     "react-dom": "^15.5.4"

@@ -34,6 +34,10 @@
   flex-wrap: wrap;
 }
 
+.demo {
+  margin-right: 40px;
+}
+
 .app-content .title {
   margin: 6px 0 6px 0;
   color: #a0522d;
@@ -48,7 +52,7 @@
   color: #a0522d;
 }
 
-.cp, .sketch-picker {
+.cp, .sketch-picker, .rc-color-picker-panel {
   margin: 6px 0 6px 0;
 }
 
@@ -58,11 +62,11 @@
 
 .result {
   height: 72px;
-  width: 460px;
+  width: 314px;
   margin-bottom: 8px;
   padding: 4px;
   background-color: #eee;
-  overflow-y: scroll;
+  overflow-y: auto;
   font-family: monospace;
   font-size: 0.8em;
 }
