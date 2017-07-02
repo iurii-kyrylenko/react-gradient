@@ -6,7 +6,6 @@ class ColorStopsHolder extends React.Component {
   constructor (props) {
     super(props)
     this.handleMouseDown = this.handleMouseDown.bind(this)
-    this.handleTouchStart = this.handleTouchStart.bind(this)
   }
 
   handleMouseDown (e) {
@@ -16,21 +15,11 @@ class ColorStopsHolder extends React.Component {
     this.props.onAddColor({ pos, pointX: e.clientX })
   }
 
-  handleTouchStart (e) {
-    e.preventDefault()
-    const pos = e.targetTouches[0].clientX - e.target.getBoundingClientRect().left
-    this.props.onAddColor({ pos, pointX: e.targetTouches[0].clientX })
-  }
-
   render () {
     const { width, stops, onAddColor, ...rest } = this.props
     const style = { width, height: 17, position: 'relative', cursor: 'crosshair' }
     return (
-      <div className="csh"
-           style={ style }
-           onMouseDown={ this.handleMouseDown }
-           onTouchStart={ this.handleTouchStart }
-      >
+      <div className="csh" style={ style } onMouseDown={ this.handleMouseDown }>
         { stops.map(stop =>
           <ColorStop key={ stop.id } stop={ stop } { ...rest } />
         )}

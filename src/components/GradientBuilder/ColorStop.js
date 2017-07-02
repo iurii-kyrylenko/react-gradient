@@ -9,9 +9,6 @@ class ColorStop extends React.Component {
     this.handleMouseDown = this.handleMouseDown.bind(this)
     this.handleMouseMove = this.handleMouseMove.bind(this)
     this.handleMouseUp = this.handleMouseUp.bind(this)
-    this.handleTouchStart = this.handleTouchStart.bind(this)
-    this.handleTouchMove = this.handleTouchMove.bind(this)
-    this.handleTouchEnd = this.handleTouchEnd.bind(this)
     this.state = {
       posStart: 0,
       dragging: false
@@ -23,16 +20,12 @@ class ColorStop extends React.Component {
     this.props.onActivate(this.props.stop.id)
     document.addEventListener('mousemove', this.handleMouseMove)
     document.addEventListener('mouseup', this.handleMouseUp)
-    document.addEventListener('touchmove', this.handleTouchMove)
-    document.addEventListener('touchend', this.handleTouchEnd)
   }
 
   deactivate () {
     this.setState({ dragging: false })
     document.removeEventListener('mousemove', this.handleMouseMove)
     document.removeEventListener('mouseup', this.handleMouseUp)
-    document.removeEventListener('touchmove', this.handleTouchMove)
-    document.removeEventListener('touchend', this.handleTouchEnd)
   }
 
   componentDidMount () {
@@ -46,12 +39,6 @@ class ColorStop extends React.Component {
     e.preventDefault()
     e.stopPropagation()
     if (!e.button) this.activate(e.clientX)
-  }
-
-  handleTouchStart (e) {
-    e.preventDefault()
-    e.stopPropagation()
-    this.activate(e.targetTouches[0].clientX)
   }
 
   handleMouseMove ({ clientX, clientY }) {
@@ -74,15 +61,7 @@ class ColorStop extends React.Component {
     onPosChange({ id, pos: newPos })
   }
 
-  handleTouchMove (e) {
-    return this.handleMouseMove(e.changedTouches[0])
-  }
-
   handleMouseUp () {
-    this.deactivate()
-  }
-
-  handleTouchEnd () {
     this.deactivate()
   }
 
@@ -91,8 +70,7 @@ class ColorStop extends React.Component {
     return (
       <div className={ isActive ? 'cs active' : 'cs' }
            style={{ left: pos }}
-           onMouseDown={ this.handleMouseDown }
-           onTouchStart={ this.handleTouchStart }>
+           onMouseDown={ this.handleMouseDown }>
         <div style={{ backgroundColor: color }} />
       </div>
     )
